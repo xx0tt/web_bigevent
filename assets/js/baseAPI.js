@@ -11,4 +11,16 @@ $.ajaxPrefilter((option) => {
       Authorization: localStorage.getItem('token'),
     }
   }
+  //不论成功还是失败，最终都会调用 complete 回调函数
+  option.complete = (res) => {
+    if (
+      res.responseJSON.status === 1 &&
+      res.responseJSON.message === '身份认证失败！'
+    ) {
+      // 清除本地token
+      localStorage.removeItem('token')
+      // 跳转到登录页面
+      location.href = '/login.html'
+    }
+  }
 })
